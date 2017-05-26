@@ -4,7 +4,7 @@ package demo
 //import demo.components.materialui._
 import demo.components._
 
-import scalacss.Defaults._
+import scalacss.ProdDefaults._
 import scalacss.ScalaCssReact._
 import scalacss.internal.mutable.GlobalRegistry
 

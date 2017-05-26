@@ -3,7 +3,6 @@ package routes
 
 import demo.components._
 import demo.pages._
-import org.scalajs.dom
 import japgolly.scalajs.react.vdom.html_<^._
 import japgolly.scalajs.react.extra.router._
 import scala.scalajs.js.Dynamic.{ global => g }
@@ -16,7 +15,7 @@ object AppRouter {
 
   //  case class EuiPages(p: LeftRoute) extends Page
   //  case class GoogleMapPages(p: LeftRoute) extends Page
-  //  case class MuiPages(p: LeftRoute) extends Page
+  case class MuiPages(p: LeftRoute) extends Page
   //  case class SuiPages(p: LeftRoute) extends Page
   //  case class ReactDraggablePages(p: LeftRoute) extends Page
   //  case class ReactGeomIconPages(p: LeftRoute) extends Page
@@ -77,9 +76,9 @@ object AppRouter {
     //      GoogleMapRouteModule.routes.prefixPath_/("#googlemap")
     //        .pmap[Page](GoogleMapPages) { case GoogleMapPages(p) => p }
     //
-    //    val muiRoutes: Rule =
-    //      MuiRouteModule.routes.prefixPath_/("#materialui")
-    //        .pmap[Page](MuiPages) { case MuiPages(p) => p }
+    val muiRoutes: Rule =
+      MuiRouteModule.routes.prefixPath_/("#materialui")
+        .pmap[Page](MuiPages) { case MuiPages(p) => p }
     //
     //    val euiRoutes: Rule =
     //      EuiRouteModule.routes.prefixPath_/("#elementalui")
@@ -98,13 +97,12 @@ object AppRouter {
       | staticRoute("#scalacss", ScalaCSSDoc) ~> render(ScalaCSSTutorial()) //      | euiRoutes
       //      | suiRoutes
       //      | googleMapRoutes
-      //      | muiRoutes
+      | muiRoutes
       //      | reactDraggableRoutes
       //      | reactGeomIconRoutes
       //      | reactInfiniteRoutes
       //      | reactListViewRoutes
-      | reactPopoverRoutes
-    //      | reactSelectRoutes
+      | reactPopoverRoutes //      | reactSelectRoutes
     //      | reactSlickRoutes
     //      | reactTableRoutes
     //      | reactTagsInputRoutes
@@ -126,12 +124,13 @@ object AppRouter {
     )
   }
 
-  val homePageMenu = Vector( //    HomePage.ComponentInfo(
-    //      name = "Material UI",
-    //      imagePath = g.materialuiImage.toString,
-    //      route = MuiPages(MuiRouteModule.Info),
-    //      tags = Stream("materialui", "material", "framework")
-    //    ),
+  val homePageMenu = Vector(
+    HomePage.ComponentInfo(
+      name = "Material UI",
+      imagePath = g.materialuiImage.toString,
+      route = MuiPages(MuiRouteModule.Info),
+      tags = Stream("materialui", "material", "framework")
+    ),
     //    HomePage.ComponentInfo(
     //      name = "Elemental UI",
     //      imagePath = g.elementaluiImage.toString,
@@ -217,12 +216,16 @@ object AppRouter {
   //    )
   )
 
-  val baseUrl =
-    if (dom.window.location.hostname == "localhost")
-      BaseUrl.fromWindowOrigin_/
-    else
-      BaseUrl.fromWindowOrigin / "sjrc/"
+  //TODO, this, whatever this is, is not working, so we temporarily replaced it to make it wokr
+  //  val baseUrl =
+  //    if (dom.window.location.hostname == "localhost")
+  //      BaseUrl.fromWindowOrigin_/
+  //    else
+  //      BaseUrl.fromWindowOrigin / "sjrc/"
 
-  val router = Router(BaseUrl.fromWindowOrigin, config)
+  println("---------------------------------")
+  println(g.googleMapImage)
+  println("---------------------------------")
+  val router = Router(BaseUrl.fromWindowUrl(a => "./index.html"), config)
 
 }

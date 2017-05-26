@@ -18,7 +18,7 @@ object HelloWorld { //extends JSApp {
   case class Backend($: BackendScope[_, _]) {
     def render() = {
       val textField = MuiTextField(id = "yo", defaultValue = "mytext")()
-      val all = MuiMuiThemeProvider()(<.div(textField, ""))
+      val all = MuiMuiThemeProvider()(textField)
 
       <.div("Hello! Please enter your name", all)
     }

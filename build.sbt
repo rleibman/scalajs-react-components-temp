@@ -50,6 +50,9 @@ lazy val demo =
     .settings(commonSettings, preventPublication, npmSettings, npmDevSettings)
     .settings(
       name := "scalajs-react-components-demo",
+      version in webpack := "2.6.1",
+      version in installWebpackDevServer := "2.6.1",
+      webpackConfigFile := Some(baseDirectory.value / "bundles" / "custom.webpack.config.js"),
       scalaJSUseMainModuleInitializer := true,
       scalaJSUseMainModuleInitializer.in(Test) := false,
       crossTarget.in(Compile, fullOptJS) := file(jsDir),
@@ -169,22 +172,39 @@ lazy val npmSettings = Seq(
     "react" ->  reactVersion,
     "react-dom" ->  reactVersion,
     "react-addons-create-fragment" ->  reactVersion,
-    "react-addons-css-transition-group" ->  reactVersion,
-    "react-addons-pure-render-mixin" ->  reactVersion,
-    "react-addons-transition-group" ->  reactVersion,
-    "react-addons-update" ->  reactVersion,
-    "react-geomicons" ->  "2.0.4",
-    "react-infinite" ->  "0.10.0",
-    "react-select" ->  "1.0.0-rc.3",
-    "react-slick" ->  "0.14.6",
-    "react-spinner" ->  "0.2.3",
-    "react-tagsinput" ->  "3.15.1",
+    "react-addons-css-transition-group" ->  "2.5.2",
+    "react-addons-pure-render-mixin" ->  "2.5.2",
+    "react-addons-transition-group" ->  "2.5.2",
+    "react-addons-update" ->  "2.5.2",
+    "react-geomicons" ->  "2.1.0",
+    "react-infinite" ->  "0.11.0",
+    "react-select" ->  "1.0.0-rc.5",
+    "react-slick" ->  "0.14.11",
+    "react-spinner" ->  "0.2.7",
+    "react-tagsinput" ->  "3.16.1",
     "react-tap-event-plugin" ->  "2.0.1",
-    "semantic-ui-react" ->  "0.65.0",
+    "semantic-ui-react" ->  "0.68.3",
     "svg-loader" ->  "0.0.2"
   )
 )
 
 lazy val npmDevSettings = Seq(
-  npmDevDependencies.in(Compile) := Seq("expose-loader" -> "0.7.3")
+  npmDevDependencies.in(Compile) := Seq(
+    "compression-webpack-plugin" -> "0.4.0",
+    "css-loader" -> "0.28.3",
+    "file-loader" -> "0.11.1",
+    "gulp-decompress" -> "2.0.1",
+    "image-webpack-loader" -> "3.3.1",
+    "imagemin" -> "5.3.1",
+    "less" -> "2.7.2",
+    "less-loader" -> "4.0.3",
+    "lodash" -> "4.17.4",
+    "node-libs-browser" -> "2.0.0",
+    "react-hot-loader" -> "1.3.1",
+    "style-loader" -> "0.18.1",
+    "url-loader" -> "0.5.8",
+    "expose-loader" -> "0.7.3",
+    "webpack" -> "2.6.1",
+    "webpack-dev-server" -> "2.4.5"
+  )
 )
