@@ -6,6 +6,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation._
 import chandu0101.scalajs.react.components._
 import chandu0101.macros.tojs.JSMacro
+import japgolly.scalajs.react.vdom._
 
 //import chandu0101.macros.tojs.JSMacro
 

@@ -226,6 +226,6 @@ object AppRouter {
   println("---------------------------------")
   println(g.googleMapImage)
   println("---------------------------------")
-  val router = Router(BaseUrl.fromWindowUrl(a => "./index.html"), config)
+  val router = Router(BaseUrl.fromWindowUrl(a => ""), config)
 
 }

@@ -4,6 +4,7 @@ package routes
 import demo.components.materialui._
 import demo.pages.MuiPage
 import japgolly.scalajs.react.extra.router.RouterConfigDsl
+import demo.components._
 
 object MuiRouteModule {
 
@@ -30,7 +31,7 @@ object MuiRouteModule {
 //
 //  case object Popover extends LeftRoute("Popover", "popover", () => MuiPopoverDemo())
 //
-//  case object TextField extends LeftRoute("Text Field", "textfield", () => MuiTextFieldDemo())
+  case object TextField extends LeftRoute("Text Field", "textfield", () => MuiTextFieldDemo().vdomElement)
 //
 //  case object ThemeProvider extends LeftRoute("Themes", "themes", () => MuiThemeProviderDemo())
 //
@@ -78,7 +79,7 @@ object MuiRouteModule {
 //    Slider,
 //    SvgIcon,
 //    SnackBar,
-//    TextField,
+    TextField,
 //    ThemeProvider,
 //    TimePicker,
 //    Table,

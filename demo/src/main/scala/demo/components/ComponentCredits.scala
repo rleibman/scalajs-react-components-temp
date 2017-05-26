@@ -51,7 +51,7 @@ object ComponentCredits {
                   }.toSet.toList
 
                 $.modState(_.copy(users = users.sortBy(_.time)))
-                  .when(true) //($.isMounted())
+                  .when(true) //TODO ($.isMounted)
                   .runNow()
               }
           }
