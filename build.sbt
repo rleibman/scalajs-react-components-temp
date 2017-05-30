@@ -1,6 +1,36 @@
 // *****************************************************************************
 // Projects
 // *****************************************************************************
+lazy val generateMui = TaskKey[Seq[File]]("generateMui")
+
+lazy val MuiVersion = "0.18.1"
+lazy val MuiLocation = "/home/rleibman/workspace.scala/material-ui/node_modules/material-ui"
+
+lazy val gen =
+  project
+    .in(file("gen"))
+    .settings(commonSettings)
+    .settings(
+      organization := "com.olvind",
+      name := "mui-generator",
+      generateMui := {
+        val cp = (fullClasspath in Runtime).value
+	val r  = runner.value
+	val genDir = sourceManaged.value
+	val s = streams.value
+	
+	genDir.mkdirs()
+	val options = List(MuiLocation, genDir.absolutePath)
+	
+        val res = r.run("com.olvind.mui.MuiRunner", cp.files, options, s.log)
+	genDir.list().map(f => genDir / f)
+      },
+      libraryDependencies ++= Seq(
+        "com.lihaoyi"   %% "ammonite-ops"   % "0.9.5",
+        "org.scalatest" %% "scalatest"      % "3.0.3" % Test
+      )
+    )
+
 lazy val macros =
   project
     .in(file("macros"))
@@ -18,10 +48,11 @@ lazy val macros =
 lazy val core =
   project
     .in(file("core"))
-    .dependsOn(macros)
+    .dependsOn(macros, gen)
     .enablePlugins(ScalaJSPlugin)
     .settings(commonSettings)
     .settings(
+      sourceGenerators in Compile += (generateMui in gen),
       libraryDependencies ++= Seq(
 	"me.lessis" %%% "semverfi" % "0.1.8" withSources(),
 	"com.lihaoyi" %%% "upickle" % "0.4.4" withSources(),
@@ -87,7 +118,7 @@ lazy val commonSettings =
 	  "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
 	  "-encoding", "utf-8",                // Specify character encoding used by source files.
 	  "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
-	  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+	//  "-Ywarn-dead-code",                  // Warn when dead code is identified.
 	//  "-Yno-adapted-args",                 // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
 	  "-Ywarn-numeric-widen",              // Warn when numerics are widened.
 	  "-Ywarn-value-discard",              // Warn when non-Unit expression results are unused.
