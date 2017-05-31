@@ -100,8 +100,8 @@ object JSMacro {
     }
 
     q""" ($target: $tpe) => {
-      import scala.language.reflectiveCalls
-      import scalajs.js.JSConverters._
+//      import scala.language.reflectiveCalls
+//      import scalajs.js.JSConverters._
       val $props = scala.scalajs.js.Dynamic.literal()
       ..$fieldUpdates
       $props

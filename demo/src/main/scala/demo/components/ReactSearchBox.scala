@@ -54,6 +54,8 @@ object ReactSearchBox {
 
   def apply(onTextChange: String => Callback, style: Style = DefaultStyle) = {
     //    component.set(key, ref)(Props(onTextChange, style))
+    val key: Key = null
+    component.withKey(key)
     component(Props(onTextChange, style))
   }
 

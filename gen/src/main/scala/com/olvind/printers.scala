@@ -42,8 +42,8 @@ object Printer {
           |${indent(1)}def apply() = {
           |${indent(2)}${hack(comp)}
           |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
-          |${indent(2)}val f = JsComponent[js.Object, Children.Varargs, Null]($prefix.${comp.name.value})
-          |${indent(2)}f(props)()
+          |${indent(2)}val f = JsComponent[js.Object, Children.None, Null]($prefix.${comp.name.value})
+          |${indent(2)}f(props)
           |${indent(1)}}
           |}
         """.stripMargin
@@ -67,7 +67,7 @@ object Printer {
            |${indent(1)}def apply(child: ${childrenProp.typeName} = js.undefined) = {
            |${indent(2)}${hack(comp)}
            |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
-           |${indent(2)}val f = JsComponent[js.Object, Children.None, Null]($prefix.${comp.name.value})
+           |${indent(2)}val f = JsComponent[js.Object, Children.Varargs, Null]($prefix.${comp.name.value})
            |${indent(2)}f(props)(child)
            |${indent(1)}}
            |}""".stripMargin

@@ -13,6 +13,7 @@ object Runner {
        |import chandu0101.macros.tojs.JSMacro
        |import japgolly.scalajs.react._
        |import japgolly.scalajs.react.raw._
+       |import japgolly.scalajs.react.vdom._
        |import org.scalajs.dom
        |import scala.scalajs.js
        |import scala.scalajs.js.`|`

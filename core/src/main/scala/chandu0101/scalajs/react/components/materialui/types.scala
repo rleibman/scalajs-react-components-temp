@@ -66,3 +66,24 @@ object MuiFocusedState {
 trait HasValue[T] extends js.Object {
   def value: js.UndefOr[T] = js.native
 }
+
+@js.native
+trait DropDownMenuProps extends js.Object {
+  //TODO
+}
+@js.native
+trait Wrapper extends js.Object {
+  //TODO
+}
+@js.native
+trait CircularProgressPath extends js.Object {
+  //TODO
+}
+@js.native
+trait Position extends js.Object {
+  //TODO
+}
+@js.native
+trait DatePickerUtils extends js.Object {
+  //TODO
+}
