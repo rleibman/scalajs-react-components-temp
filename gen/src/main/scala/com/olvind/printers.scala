@@ -41,8 +41,8 @@ object Printer {
           |
           |${indent(1)}def apply() = {
           |${indent(2)}${hack(comp)}
-          |${indent(2)}f(props).asInstanceOf[ReactComponentU_]
-          |${indent(2)}val f = JsComponent[Dynamic.literal, Children.Varargs, Null]($prefix.${comp.name.value})
+          |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
+          |${indent(2)}val f = JsComponent[js.Object, Children.Varargs, Null]($prefix.${comp.name.value})
           |${indent(2)}f(props)()
           |${indent(1)}}
           |}
@@ -55,7 +55,7 @@ object Printer {
            |${indent(1)}def apply(children: ${childrenProp.baseType.name}*) = {
            |${indent(2)}${hack(comp)}
            |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
-           |${indent(2)}val f = JsComponent[Dynamic.literal, Children.Varargs, Null]($prefix.${comp.name.value})
+           |${indent(2)}val f = JsComponent[js.Object, Children.Varargs, Null]($prefix.${comp.name.value})
            |${indent(2)}f(props)(children: _*)
            |${indent(1)}}
            |}""".stripMargin
@@ -67,7 +67,7 @@ object Printer {
            |${indent(1)}def apply(child: ${childrenProp.typeName} = js.undefined) = {
            |${indent(2)}${hack(comp)}
            |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
-           |${indent(2)}val f = JsComponent[Dynamic.literal, Children.None, Null]($prefix.${comp.name.value})
+           |${indent(2)}val f = JsComponent[js.Object, Children.None, Null]($prefix.${comp.name.value})
            |${indent(2)}f(props)(child)
            |${indent(1)}}
            |}""".stripMargin
@@ -113,8 +113,8 @@ object Printer {
         if (p.name.value == "type") "`type`" else p.name.value
       val deprecation: String =
         (p.deprecatedMsg, p.commentOpt.exists(_.anns.contains(Ignore))) match {
-          case (Some(msg), _) => s"""${indent(1)}@deprecated("$msg")\n"""
-          case (None, true) => "" //s"""${indent(1)}@deprecated("Internal API")\n"""
+          case (Some(msg), _) => s"""${indent(1)}@deprecated("$msg", "")\n"""
+          case (None, true) => "" //s"""${indent(1)}@deprecated("Internal API", "")\n"""
           case _ => ""
         }
       s"$comment$deprecation${indent(1)}${padTo(fixedName + ": ")(fs.maxFieldNameLen + 2)}"
@@ -151,7 +151,7 @@ object Printer {
          |${
       c.methods.map { m =>
         val deprecated: String =
-          if (m.toString.toLowerCase.contains("deprecated")) s"${indent(1)}@deprecated\n"
+          if (m.toString.toLowerCase.contains("deprecated")) s"""${indent(1)}@deprecated("", "")\n"""
           else ""
         val comment = outComment(m.commentOpt, None)
         s"$comment$deprecated${indent(1)}def ${m.definition} = js.native"
