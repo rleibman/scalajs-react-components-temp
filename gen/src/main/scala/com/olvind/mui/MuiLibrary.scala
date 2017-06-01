@@ -20,6 +20,8 @@ case class MuiLibrary(base: Path) extends Library {
   override val name = "materialui"
   override val typeMapper = MuiTypeMapper
   override val memberMapper = MuiTypeMemberMethodMapper
+  override val indexNames = Set("index.js")
+  override val packageName = "chandu0101.scalajs.react.components.materialui"
 
   case object Internal {
     val AppCanvas = ComponentDef(CompName("AppCanvas"))

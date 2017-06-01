@@ -4,6 +4,9 @@ import ammonite.ops.Path
 import com.olvind.requiresjs._
 
 import scala.collection.mutable
+import java.io.File
+import ammonite.ops.RelPath
+
 object Runner {
 
   def preludeFor(library: Library): String =
@@ -41,48 +44,45 @@ object Runner {
         case Single(n, c) =>
           Seq(c)
 
-        case Multiple(p, rs) =>
-          if (visited.contains(p)) {
+        case Multiple(path, rs) =>
+          if (visited.contains(path)) {
             Seq.empty
           } else {
-            visited += p
+            visited += path
             val requireds: Seq[Required] = rs.map(_.run).toList
             val recursive: Seq[FoundComponent] = requireds flatMap flattenScan
-            System.err.println(s"Found in path $p: ${recursive.map(_.name.value)}")
+            System.err.println(s"Found in path $path: ${recursive.map(_.name.value)}")
 
             recursive
           }
       }
 
-    library.locations.map(requiresjs.Require.apply).flatMap(flattenScan)
+    library.locations.map(requiresjs.Require(_, library.indexNames)).flatMap(flattenScan)
   }
 
-  def apply(library: Library, outFolder: Path) = {
-    val foundComponents: Seq[FoundComponent] =
-      foundComponentsFor(library)
+  def apply(library: Library, outputFolder: Path) = {
+    val foundComponents: Seq[FoundComponent] = foundComponentsFor(library)
 
-    val allFound: Map[CompName, FoundComponent] =
-      foundComponents.map(c => c.name -> c).toMap
+    val allFound: Map[CompName, FoundComponent] = foundComponents.map(c => c.name -> c).toMap
 
     val (mainFiles: Seq[PrimaryOutFile], secondaryFiles: Seq[SecondaryOutFile]) =
       library.components.foldLeft((Seq.empty[PrimaryOutFile], Seq.empty[SecondaryOutFile])) {
         case ((ps, ss), c) =>
 
-          val parsed: ParsedComponent =
-            ParseComponent(allFound, library, c)
+          val parsed: ParsedComponent = ParseComponent(allFound, library, c)
 
-          val (primaryFile, secondaryFile) =
-            Printer(library.prefixOpt.getOrElse(""), parsed)
+          val (primaryFile, secondaryFile) = Printer(library.prefixOpt.getOrElse(""), parsed)
 
           (ps :+ primaryFile, ss ++ secondaryFile)
       }
 
-    outFolder.toIO.mkdir()
+    val fullOutputPath = outputFolder / RelPath(library.packageName.replaceAll("\\.", File.separator))
+    fullOutputPath.toIO.mkdirs()
 
     val prelude: String =
       preludeFor(library)
 
-    printToFile(outFolder / "gen-types.scala") {
+    printToFile(fullOutputPath / "gen-types.scala") {
       w =>
         w.println(prelude)
         secondaryFiles.sortBy(_.content).distinct.foreach {
@@ -94,7 +94,7 @@ object Runner {
 
     mainFiles foreach {
       case PrimaryOutFile(compName, content, secondaries) =>
-        printToFile(destinationPathFor(outFolder, library.prefixOpt, compName)) {
+        printToFile(destinationPathFor(fullOutputPath, library.prefixOpt, compName)) {
           w =>
             w.println(prelude + content)
             secondaries.foreach {

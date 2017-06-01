@@ -1,36 +1,6 @@
 // *****************************************************************************
 // Projects
 // *****************************************************************************
-lazy val generateMui = TaskKey[Seq[File]]("generateMui")
-
-lazy val MuiVersion = "0.18.1"
-lazy val MuiLocation = "/home/rleibman/workspace.scala/material-ui/node_modules/material-ui"
-
-lazy val gen =
-  project
-    .in(file("gen"))
-    .settings(commonSettings)
-    .settings(
-      organization := "com.olvind",
-      name := "mui-generator",
-      generateMui := {
-        val cp = (fullClasspath in Runtime).value
-	val r  = runner.value
-	val genDir = sourceManaged.value
-	val s = streams.value
-	
-	genDir.mkdirs()
-	val options = List(MuiLocation, genDir.absolutePath)
-	
-        val res = r.run("com.olvind.mui.MuiRunner", cp.files, options, s.log)
-	genDir.list().map(f => genDir / f)
-      },
-      libraryDependencies ++= Seq(
-        "com.lihaoyi"   %% "ammonite-ops"   % "0.9.5",
-        "org.scalatest" %% "scalatest"      % "3.0.3" % Test
-      )
-    )
-
 lazy val macros =
   project
     .in(file("macros"))
@@ -45,6 +15,54 @@ lazy val macros =
       )
     )
 
+lazy val generateMui = TaskKey[Seq[File]]("generateMui")
+lazy val MuiVersion = "0.18.1"
+lazy val MuiLocation = "/home/rleibman/workspace.scala/material-ui/node_modules/material-ui"
+
+lazy val generateEui = TaskKey[Seq[File]]("generateEui")
+lazy val EuiVersion = "0.6.1"
+lazy val EuiLocation = "/home/rleibman/workspace.scala/elemental/node_modules/elemental"
+
+lazy val gen =
+  project
+    .in(file("gen"))
+    .settings(commonSettings)
+    .settings(
+      organization := "com.olvind",
+      name := "generator",
+      generateMui := {
+        val cp = (fullClasspath in Runtime).value
+	val r  = runner.value
+	val genDir = sourceManaged.value
+	val s = streams.value
+	
+	val options = List(MuiLocation, genDir.absolutePath)
+	
+        val res = r.run("com.olvind.mui.MuiRunner", cp.files, options, s.log)
+	val pathFinder: PathFinder = genDir ** "*.scala"
+	val files = pathFinder.get.filter(_.getAbsolutePath.contains("material"))
+	files
+      },
+      generateEui := {
+        val cp = (fullClasspath in Runtime).value
+	val r  = runner.value
+	val genDir = sourceManaged.value
+	val s = streams.value
+	genDir.mkdirs()
+	val options = List(EuiLocation, genDir.absolutePath)
+	
+        val res = r.run("com.olvind.eui.EuiRunner", cp.files, options, s.log)
+
+	val pathFinder: PathFinder = genDir ** "*.scala"
+	val files = pathFinder.get.filter(_.getAbsolutePath.contains("elemental"))
+	files
+      },
+      libraryDependencies ++= Seq(
+        "com.lihaoyi"   %% "ammonite-ops"   % "0.9.5",
+        "org.scalatest" %% "scalatest"      % "3.0.3" % Test
+      )
+    )
+
 lazy val core =
   project
     .in(file("core"))
@@ -53,6 +71,7 @@ lazy val core =
     .settings(commonSettings)
     .settings(
       sourceGenerators in Compile += (generateMui in gen),
+      sourceGenerators in Compile += (generateEui in gen),
       libraryDependencies ++= Seq(
 	"me.lessis" %%% "semverfi" % "0.1.8" withSources(),
 	"com.lihaoyi" %%% "upickle" % "0.4.4" withSources(),

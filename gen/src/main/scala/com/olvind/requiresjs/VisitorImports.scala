@@ -18,7 +18,8 @@ case class VisitorImports(n: FunctionNode, currentPath: Path) extends VisitorHel
           if (o.getString.startsWith(".")) Left(add(currentPath, o.getString))
           else Right(o.getString)
 
-        ret(nameStack.head) = Import(nameStack.head, target)
+        val name = nameStack.headOption.getOrElse(VarName(o.getString))
+        ret(name) = Import(name, target)
 
       case (i: IdentNode, List(arg: IdentNode)) if i.getName.contains("interopRequireDefault") =>
         ret(VarName(arg.getName)) = ret(VarName(arg.getName)).copy(varName = nameStack.head)

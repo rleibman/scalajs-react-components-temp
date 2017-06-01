@@ -24,6 +24,8 @@ trait Library {
   def components: Seq[ComponentDef]
   def typeMapper: TypeMapper
   def memberMapper: MemberMapper
+  def indexNames: Set[String]
+  def packageName: String
 
   @deprecated
   final def prefix: String =

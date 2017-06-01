@@ -33,8 +33,8 @@ final case class ParsedComponent(
           val bounds: String =
             (p.jsObject, withBounds) match {
               case (_, false) ⇒ ""
-              case (true, true) ⇒ "" //todo: revisit
-              case (false, true) ⇒ ""
+              case (true, true) ⇒ " <: js.Any" //todo: revisit
+              case (false, true) ⇒ " <: js.Any"
             }
           s"${p.name}$bounds"
       }.mkString("[", ", ", "]")
